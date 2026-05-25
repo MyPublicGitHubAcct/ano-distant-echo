@@ -1,0 +1,62 @@
+# Build
+build/
+cmake-build-*/
+CMakeCache.txt
+CMakeFiles/
+CMakeUserPresets.json
+CTestTestfile.cmake
+_deps/
+
+# JUCE
+Builds/
+JuceLibraryCode/
+*.jucer.bak
+*.vcxproj
+*.vcxproj.filters
+*.sln
+
+# Compiled / linked artifacts
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+*.vst3
+*.component
+*.app
+
+# Xcode
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+*.xcuserstate
+DerivedData/
+xcuserdata/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+*.egg-info/
+dist/
+.pytest_cache/
+.ruff_cache/
+
+# Generated files
+python/output/
+python/tmp/
+*.gen.wav
+tests/golden/**.wav
+tests/golden/input/**.wav
+tests/output/**.wav
+docs/img/**.png
+
+# IDEs and other
+.vscode/
+.idea/
+.claude/
+*.swp
+*.swo
+.DS_Store
+.AppleDouble

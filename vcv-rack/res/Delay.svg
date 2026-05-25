@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 380" width="150" height="380">
+  <!-- Panel background -->
+  <rect width="150" height="380" fill="#1a1a2e"/>
+  <!-- Accent strip -->
+  <rect x="0" y="0" width="150" height="4" fill="#6e9ac8"/>
+  <rect x="0" y="376" width="150" height="4" fill="#6e9ac8"/>
+
+  <!-- Module title -->
+  <text x="75" y="22" text-anchor="middle" fill="#6e9ac8"
+        font-family="sans-serif" font-size="9" font-weight="bold"
+        letter-spacing="1">DELAY</text>
+  <text x="75" y="31" text-anchor="middle" fill="#666"
+        font-family="sans-serif" font-size="5">ANOESIS</text>
+
+  <!-- Time knob centre: mm2px(25.4, 22) = (75, 65) -->
+  <text x="75" y="51" text-anchor="middle" fill="#aaa"
+        font-family="sans-serif" font-size="7" font-weight="bold">TIME</text>
+
+  <!-- Feedback knob centre: mm2px(25.4, 44) = (75, 130) -->
+  <text x="75" y="116" text-anchor="middle" fill="#aaa"
+        font-family="sans-serif" font-size="7" font-weight="bold">FEEDBACK</text>
+
+  <!-- Mix knob centre: mm2px(25.4, 66) = (75, 195) -->
+  <text x="75" y="181" text-anchor="middle" fill="#aaa"
+        font-family="sans-serif" font-size="7" font-weight="bold">MIX</text>
+
+  <!-- Mod Depth knob: mm2px(10.16, 76) = (30, 224); Diffusion: mm2px(40.64, 76) = (120, 224) -->
+  <text x="30"  y="210" text-anchor="middle" fill="#aaa"
+        font-family="sans-serif" font-size="6" font-weight="bold">MOD</text>
+  <text x="120" y="210" text-anchor="middle" fill="#aaa"
+        font-family="sans-serif" font-size="6" font-weight="bold">DIFF</text>
+
+  <!-- Tape controls: mm2px(10.16/40.64, 83) = (30/120, 245) -->
+  <text x="30"  y="231" text-anchor="middle" fill="#aaa"
+        font-family="sans-serif" font-size="6" font-weight="bold">SAT</text>
+  <text x="120" y="231" text-anchor="middle" fill="#aaa"
+        font-family="sans-serif" font-size="6" font-weight="bold">AGE</text>
+
+  <!-- Duck controls: mm2px(10.16/40.64, 93) = (30/120, 275); Self Osc: mm2px(25.4, 93) = (75, 275) -->
+  <text x="30"  y="261" text-anchor="middle" fill="#aaa"
+        font-family="sans-serif" font-size="6" font-weight="bold">DUCK</text>
+  <text x="75"  y="261" text-anchor="middle" fill="#6e9ac8"
+        font-family="sans-serif" font-size="6" font-weight="bold">OSC</text>
+  <text x="120" y="261" text-anchor="middle" fill="#aaa"
+        font-family="sans-serif" font-size="6" font-weight="bold">DEPTH</text>
+
+  <!-- CV row: mm2px(10.16/20.32/30.48, 104) = (30/60/90, 307) -->
+  <text x="60"  y="292" text-anchor="middle" fill="#555"
+        font-family="sans-serif" font-size="5">CV</text>
+  <text x="30"  y="300" text-anchor="middle" fill="#888"
+        font-family="sans-serif" font-size="5.5">TIM</text>
+  <text x="60"  y="300" text-anchor="middle" fill="#888"
+        font-family="sans-serif" font-size="5.5">FB</text>
+  <text x="90"  y="300" text-anchor="middle" fill="#888"
+        font-family="sans-serif" font-size="5.5">MIX</text>
+
+  <!-- Timing inputs row (20e/20f): mm2px(10.16/20.32/30.48, 111) = (30/60/90, 328) -->
+  <text x="30"  y="320" text-anchor="middle" fill="#888"
+        font-family="sans-serif" font-size="5.5">TAP</text>
+  <text x="60"  y="320" text-anchor="middle" fill="#888"
+        font-family="sans-serif" font-size="5.5">CLK</text>
+  <text x="90"  y="320" text-anchor="middle" fill="#888"
+        font-family="sans-serif" font-size="5.5">V/OCT</text>
+
+  <!-- Signal (green) and clip (red) indicator lights: mm2px(40.64, 109.5/112) = (120, 323/331) -->
+  <circle cx="120" cy="323" r="3" fill="#1e2a1e"/>
+  <circle cx="120" cy="331" r="3" fill="#2a1e1e"/>
+
+  <!-- Audio port labels (15: stereo L/R) -->
+  <!-- L row: mm2px(10.16/20.32/30.48/40.64, 118) = (30/60/90/120, 348) -->
+  <!-- R OUT: mm2px(40.64, 123) = (120, 363) -->
+  <line x1="8" y1="355" x2="142" y2="355" stroke="#333" stroke-width="0.5"/>
+  <text x="30"  y="361" text-anchor="middle" fill="#888"
+        font-family="sans-serif" font-size="5.5">L IN</text>
+  <text x="60"  y="361" text-anchor="middle" fill="#888"
+        font-family="sans-serif" font-size="6">BYP</text>
+  <text x="90"  y="361" text-anchor="middle" fill="#888"
+        font-family="sans-serif" font-size="5.5">R IN</text>
+  <text x="120" y="361" text-anchor="middle" fill="#6e9ac8"
+        font-family="sans-serif" font-size="5.5">L OUT</text>
+  <!-- R OUT label below L OUT -->
+  <text x="120" y="373" text-anchor="middle" fill="#6e9ac8"
+        font-family="sans-serif" font-size="5.5">R OUT</text>
+</svg>

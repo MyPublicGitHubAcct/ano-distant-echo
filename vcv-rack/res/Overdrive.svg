@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 380" width="150" height="380">
+  <!-- Panel background -->
+  <rect width="150" height="380" fill="#1a1a2e"/>
+  <!-- Accent strip -->
+  <rect x="0" y="0" width="150" height="4" fill="#c8a96e"/>
+  <rect x="0" y="376" width="150" height="4" fill="#c8a96e"/>
+
+  <!-- Module title -->
+  <text x="75" y="22" text-anchor="middle" fill="#c8a96e"
+        font-family="sans-serif" font-size="9" font-weight="bold"
+        letter-spacing="1">OVERDRIVE</text>
+  <text x="75" y="31" text-anchor="middle" fill="#666"
+        font-family="sans-serif" font-size="5">ANOESIS</text>
+
+  <!-- Left column: Drive/Tone/Level large knobs at x=15.24mm (45px) -->
+  <!-- Drive knob centre: mm2px(15.24, 22) = (45, 65) -->
+  <text x="45" y="51" text-anchor="middle" fill="#aaa"
+        font-family="sans-serif" font-size="7" font-weight="bold">DRIVE</text>
+
+  <!-- Tone knob centre: mm2px(15.24, 40) = (45, 118) -->
+  <text x="45" y="104" text-anchor="middle" fill="#aaa"
+        font-family="sans-serif" font-size="7" font-weight="bold">TONE</text>
+
+  <!-- Level knob centre: mm2px(15.24, 58) = (45, 171) -->
+  <text x="45" y="157" text-anchor="middle" fill="#aaa"
+        font-family="sans-serif" font-size="7" font-weight="bold">LEVEL</text>
+
+  <!-- Right column: Mid/Presence small knobs + Pick toggle at x=35.56mm (105px) -->
+  <!-- Mid knob centre: mm2px(35.56, 22) = (105, 65) -->
+  <text x="105" y="51" text-anchor="middle" fill="#aaa"
+        font-family="sans-serif" font-size="6.5" font-weight="bold">MID</text>
+
+  <!-- Presence knob centre: mm2px(35.56, 40) = (105, 118) -->
+  <text x="105" y="104" text-anchor="middle" fill="#aaa"
+        font-family="sans-serif" font-size="6.5" font-weight="bold">PRES</text>
+
+  <!-- Pick toggle centre: mm2px(35.56, 58) = (105, 171) -->
+  <text x="105" y="157" text-anchor="middle" fill="#aaa"
+        font-family="sans-serif" font-size="6" font-weight="bold">PICK</text>
+
+  <!-- Bias knob centre: mm2px(35.56, 66) = (105, 195) -->
+  <text x="105" y="181" text-anchor="middle" fill="#aaa"
+        font-family="sans-serif" font-size="6" font-weight="bold">BIAS</text>
+
+  <!-- CV row 1: mm2px(10.16/20.32/30.48/40.64, 76) = (30/60/90/120, 225) -->
+  <text x="75" y="210" text-anchor="middle" fill="#555"
+        font-family="sans-serif" font-size="5">CV</text>
+  <text x="30"  y="218" text-anchor="middle" fill="#888"
+        font-family="sans-serif" font-size="5.5">DRV</text>
+  <text x="60"  y="218" text-anchor="middle" fill="#888"
+        font-family="sans-serif" font-size="5.5">TON</text>
+  <text x="90"  y="218" text-anchor="middle" fill="#888"
+        font-family="sans-serif" font-size="5.5">LVL</text>
+  <text x="120" y="218" text-anchor="middle" fill="#888"
+        font-family="sans-serif" font-size="5.5">MID</text>
+
+  <!-- CV row 2: mm2px(10.16/20.32/30.48, 89) = (30/60/90, 263) -->
+  <!-- position mm2px(40.64, 89) reserved for TYPE/SHAPE CV (TODO 20d) -->
+  <text x="30"  y="249" text-anchor="middle" fill="#888"
+        font-family="sans-serif" font-size="5.5">PRS</text>
+  <text x="60"  y="249" text-anchor="middle" fill="#888"
+        font-family="sans-serif" font-size="5.5">PCK</text>
+  <text x="90"  y="249" text-anchor="middle" fill="#888"
+        font-family="sans-serif" font-size="5.5">BAS</text>
+
+  <!-- Cabinet IR CKSS toggle: mm2px(25.4, 96) = (75, 284) -->
+  <text x="75" y="272" text-anchor="middle" fill="#aaa"
+        font-family="sans-serif" font-size="6" font-weight="bold">CAB</text>
+
+  <!-- Signal (green) and clip (red) indicator lights above OUT port -->
+  <!-- Lights: mm2px(40.64, 101/104.5) = (120, 298/309) -->
+  <circle cx="120" cy="298" r="3" fill="#1e2a1e"/>
+  <circle cx="120" cy="309" r="3" fill="#2a1e1e"/>
+
+  <!-- Audio port labels: mm2px(10.16/25.4/40.64, 112) = (30/75/120, 331) -->
+  <!-- IN/BYP labels above port; OUT label below port (lights occupy the space above OUT) -->
+  <text x="30"  y="317" text-anchor="middle" fill="#888"
+        font-family="sans-serif" font-size="6">IN</text>
+  <text x="75"  y="317" text-anchor="middle" fill="#888"
+        font-family="sans-serif" font-size="6">BYP</text>
+  <text x="120" y="345" text-anchor="middle" fill="#c8a96e"
+        font-family="sans-serif" font-size="6">OUT</text>
+
+  <!-- Divider line above audio section -->
+  <line x1="8" y1="313" x2="142" y2="313" stroke="#333" stroke-width="0.5"/>
+</svg>

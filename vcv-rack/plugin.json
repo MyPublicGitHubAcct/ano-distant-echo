@@ -1,0 +1,23 @@
+{
+  "slug": "Distant-Echo",
+  "name": "Distant-Echo",
+  "version": "2.0.0",
+  "license": "MIT",
+  "brand": "Anoesis",
+  "author": "Mark Wagner",
+  "authorEmail": "markalanwagner@gmail.com",
+  "modules": [
+    {
+      "slug": "Overdrive",
+      "name": "Overdrive",
+      "description": "Diode hard-clipping overdrive with drive, tone, and level controls",
+      "tags": ["Distortion", "Effect"]
+    },
+    {
+      "slug": "Delay",
+      "name": "Delay",
+      "description": "Feedback delay with single-pole LP in the feedback path",
+      "tags": ["Delay", "Effect"]
+    }
+  ]
+}
