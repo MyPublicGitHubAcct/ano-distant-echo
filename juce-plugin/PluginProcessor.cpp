@@ -135,6 +135,13 @@ bool DistantEchoProcessor::isBusesLayoutSupported(const BusesLayout& layouts) co
     return out == layouts.getMainInputChannelSet();
 }
 
+void DistantEchoProcessor::releaseResources()
+{
+    for (auto& od  : overdrive) od.reset();
+    for (auto& cab : cabinet)   cab.reset();
+    for (auto& dl  : delay)     dl.reset();
+}
+
 void DistantEchoProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
     for (auto& od : overdrive)

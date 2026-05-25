@@ -91,6 +91,15 @@ struct DelayModule : Module {
     }
 
     void onReset(const ResetEvent& /*e*/) override {
+        bypassHigh     = false;
+        tapPrimed      = false;
+        tapHigh        = false;
+        tapTimeMs      = 0.f;
+        tapSampleCount = 0;
+        clkPrimed      = false;
+        clkHigh        = false;
+        clkTimeMs      = 0.f;
+        clkSampleCount = 0;
         effect.prepare(APP->engine->getSampleRate(), 1);
     }
 

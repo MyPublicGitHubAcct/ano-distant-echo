@@ -80,6 +80,7 @@ struct OverdriveModule : Module {
     }
 
     void onReset(const ResetEvent& /*e*/) override {
+        bypassHigh = false;
         effect.prepare(APP->engine->getSampleRate(), 1);
         cabinet.prepare(APP->engine->getSampleRate(), 1);
     }
