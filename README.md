@@ -17,7 +17,10 @@ Both effects are functional and fully tested. Known gaps before production use:
 | VCV Rack: signal/clip indicator lights on both modules | Done (TODO 20c) |
 | VCV Rack: bypass CV gate jack (BYP) on both modules | Done (TODO 20h) |
 | VCV Rack: Delay tap tempo, clock, and V/oct inputs | Done (TODO 20e/20f) |
-| VCV Rack: Overdrive distortion type and shape CV inputs | Not yet (TODO 20d) |
+| VCV Rack: Overdrive distortion type and shape CV inputs | Done (TODO 20d) — TYPE CV (0–8 V → type 0–4) in CV row 2; SHAPE CV (0–4 V → shape 0–2) at y=100 mm |
+| VCV Rack: both panels widened to 16HP | Not yet (TODO 20o/20p) — current 10HP layouts are at capacity |
+| VCV Rack: Cabinet Type CV input for Overdrive | Not yet (TODO 20q) — requires 16HP reflow first |
+| VCV Rack: Delay secondary parameter CV inputs (tape age, duck depth, self-osc gate) | Not yet (TODO 20r) — requires 16HP reflow first |
 | Delay blue color: SVG `#6e9ac8` vs JUCE `#4477aa` | Mismatch (TODO 21j) |
 | Self-oscillation mode on Delay | Done (TODO 14g) |
 | Reverb, Tremolo, Compressor effects | Planned (§23–25) |
@@ -337,7 +340,7 @@ Parameters exposed via `AudioProcessorValueTreeState`:
 
 Both modules share a dark `#1a1a2e` panel with accent strips and title text at top and bottom. Audio IN is at bottom-left, audio OUT at bottom-right. Both call `configBypass(AUDIO_INPUT, AUDIO_OUTPUT)` so right-click → Bypass passes audio through dry.
 
-**Overdrive** (10HP, gold accent `#c8a96e`): Two-column layout — Drive / Tone / Level large knobs in the left column (x=15.24 mm), Mid / Presence small knobs + Pick Sensitivity toggle + Bias small knob in the right column (x=35.56 mm, y=22/40/58/66 mm). CV row 1 (y=76 mm): Drive / Tone / Level / Mid — four jacks. CV row 2 (y=89 mm): Presence / Pick / Bias — three jacks (one position reserved for Type/Shape CV, TODO 20d). Cabinet IR CKSS toggle at x=25.4 mm, y=96 mm ("CAB"); cabinet preset (1×12/4×12/combo) via right-click context menu. Distortion Type and Clip Shape via right-click context menu. Bottom row: IN / BYP / OUT — BYP is a gate jack (> 1 V passes audio dry and resets effect state). Green SIGNAL and red CLIP indicator lights appear near the output jack.
+**Overdrive** (10HP, gold accent `#c8a96e`): Two-column layout — Drive / Tone / Level large knobs in the left column (x=15.24 mm), Mid / Presence small knobs + Pick Sensitivity toggle + Bias small knob in the right column (x=35.56 mm, y=22/40/58/66 mm). CV row 1 (y=76 mm): Drive / Tone / Level / Mid — four jacks. CV row 2 (y=89 mm): Presence / Pick / Bias / Type — four jacks; TYPE CV (0–8 V) snaps to distortion type 0–4. SHAPE CV at x=10.16 mm, y=100 mm (isolated row between CV row 2 and the audio section); SHAPE CV (0–4 V) snaps to clip shape 0–2. Cabinet IR CKSS toggle at x=25.4 mm, y=96 mm ("CAB"); cabinet preset (1×12/4×12/combo) via right-click context menu. Distortion Type and Clip Shape also settable via right-click context menu. Bottom row: IN / BYP / OUT — BYP is a gate jack (> 1 V passes audio dry and resets effect state). Green SIGNAL and red CLIP indicator lights appear near the output jack.
 
 **Delay** (10HP, blue accent `#6e9ac8`): Three large knobs (Time, Feedback, Mix) centred at x=25.4 mm. Secondary controls flank the large knobs at x=10.16 mm (left) and x=40.64 mm (right) — Mod Depth / Saturation toggle / Duck Threshold on the left; Diffusion / Tape Age / Duck Depth on the right. Self Oscillate (OSC) CKSS toggle centred at x=25.4 mm on the duck controls row (y=93 mm). One CV row — Time / Feedback / Mix CV (y=104 mm). Timing inputs row (y=111 mm): TAP / CLK / V/OCT. TAP and CLK both use rising-edge detection (≥ 1 V); two pulses establish the interval (10–4000 ms). V/OCT maps 1 V/oct to delay time via `1000 / (440 × 2^v)` ms. Priority: V/OCT > CLK > TAP > TIME knob; TIME CV offset is suppressed when V/OCT is connected. Bottom row: L IN / BYP / R IN / L OUT — R IN (x=30.48 mm, y=118 mm) enables stereo-independent mode when connected; R OUT (x=40.64 mm, y=123 mm) carries the right channel. BYP is a gate jack (> 1 V passes both channels dry and resets effect state). Green SIGNAL and red CLIP indicator lights appear near the output jack.
 
@@ -347,6 +350,8 @@ Both modules share a dark `#1a1a2e` panel with accent strips and title text at t
 | Mid | ±5 V | ±8 dB offset |
 | Presence | ±5 V | ±4 dB offset |
 | Bias | ±5 V | ±0.5 offset (clamped to ±0.5) |
+| Distortion Type (Overdrive) | 0–8 V | snaps to type index 0–4 when connected: 0 V = Hard Clip, ~2 V = Soft Clip, ~4 V = Foldback, ~6 V = Asymmetric, ~8 V = Bitcrush |
+| Clip Shape (Overdrive) | 0–4 V | snaps to shape index 0–2 when connected: 0 V = Flat, ~1.3 V = Mid Focus, ~2.7 V = Bright Focus |
 | Pick Sensitivity | gate > 1 V | overrides the panel toggle when jack is connected |
 | Time | ±5 V | ±1000 ms offset |
 | Feedback | ±5 V | ±0.51 offset (clamped to 0–0.95 normally; 0–1.02 when Self Oscillate is on) |

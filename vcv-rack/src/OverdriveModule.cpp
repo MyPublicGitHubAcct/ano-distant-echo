@@ -27,6 +27,8 @@ struct OverdriveModule : Module {
         PRESENCE_CV_INPUT, // 13d
         BIAS_CV_INPUT,     // 16a
         BYPASS_INPUT,      // 20h: gate > 1 V → audio passthrough + effect reset
+        TYPE_CV_INPUT,     // 20d: 0–8 V → distortion type index 0–4
+        SHAPE_CV_INPUT,    // 20d: 0–4 V → clip shape index 0–2
         NUM_INPUTS
     };
     enum OutputIds {
@@ -70,6 +72,8 @@ struct OverdriveModule : Module {
         configInput(PRESENCE_CV_INPUT, "Presence CV");      // 13d
         configInput(BIAS_CV_INPUT,     "Bias CV");           // 16a
         configInput(BYPASS_INPUT,      "Bypass");            // 20h
+        configInput(TYPE_CV_INPUT,     "Type CV");           // 20d
+        configInput(SHAPE_CV_INPUT,    "Shape CV");          // 20d
         configOutput(AUDIO_OUTPUT, "Audio");
         configBypass(AUDIO_INPUT, AUDIO_OUTPUT);            // 20k: pass audio through on bypass
     }
@@ -106,10 +110,17 @@ struct OverdriveModule : Module {
             bypassHigh = nowHigh;
         }
 
-        effect.setDistortionType(
-            static_cast<DistortionType>((int)params[TYPE_PARAM].getValue()));
-        effect.setClipShape(
-            static_cast<ClipShape>((int)params[SHAPE_PARAM].getValue()));
+        // Distortion type: knob value, or CV override (0–8 V → index 0–4)
+        int typeIdx = (int)params[TYPE_PARAM].getValue();
+        if (inputs[TYPE_CV_INPUT].isConnected())
+            typeIdx = (int)clamp(std::round(inputs[TYPE_CV_INPUT].getVoltage() * 0.5f), 0.f, 4.f);
+        effect.setDistortionType(static_cast<DistortionType>(typeIdx));
+
+        // Clip shape: knob value, or CV override (0–4 V → index 0–2)
+        int shapeIdx = (int)params[SHAPE_PARAM].getValue();
+        if (inputs[SHAPE_CV_INPUT].isConnected())
+            shapeIdx = (int)clamp(std::round(inputs[SHAPE_CV_INPUT].getVoltage() * 0.75f), 0.f, 2.f);
+        effect.setClipShape(static_cast<ClipShape>(shapeIdx));
 
         // CV inputs are ±5V; map to ±0.5 offset on a 0–1 knob
         float drive = clamp(params[DRIVE_PARAM].getValue()
@@ -177,7 +188,7 @@ struct OverdriveWidget : ModuleWidget {
         addParam(createParamCentered<RoundSmallBlackKnob>(mm2px(Vec(35.56, 22.0)), module, OverdriveModule::MID_PARAM));
         addParam(createParamCentered<RoundSmallBlackKnob>(mm2px(Vec(35.56, 40.0)), module, OverdriveModule::PRESENCE_PARAM));
         addParam(createParamCentered<CKSS>(mm2px(Vec(35.56, 58.0)), module, OverdriveModule::PICK_PARAM));
-        // 16a: Bias small knob below Pick, CV at reserved slot in CV row 2
+        // 16a: Bias small knob below Pick
         addParam(createParamCentered<RoundSmallBlackKnob>(mm2px(Vec(35.56, 66.0)), module, OverdriveModule::BIAS_PARAM));
 
         // CV row 1 at y=76 mm: Drive, Tone, Level, Mid
@@ -186,10 +197,12 @@ struct OverdriveWidget : ModuleWidget {
         addInput(createInputCentered<PJ301MPort>(mm2px(Vec(30.48, 76.0)), module, OverdriveModule::LEVEL_CV_INPUT));
         addInput(createInputCentered<PJ301MPort>(mm2px(Vec(40.64, 76.0)), module, OverdriveModule::MID_CV_INPUT));
 
-        // CV row 2 at y=89 mm: Presence, Pick, Bias; x=40.64 reserved for TYPE/SHAPE CV (TODO 20d)
-        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(10.16, 89.0)), module, OverdriveModule::PRESENCE_CV_INPUT));
-        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(20.32, 89.0)), module, OverdriveModule::PICK_CV_INPUT));
-        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(30.48, 89.0)), module, OverdriveModule::BIAS_CV_INPUT)); // 16a
+        // CV row 2 at y=89 mm: Presence, Pick, Bias, Type CV; Shape CV at x=10.16, y=100 mm
+        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(10.16, 89.0)),  module, OverdriveModule::PRESENCE_CV_INPUT));
+        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(20.32, 89.0)),  module, OverdriveModule::PICK_CV_INPUT));
+        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(30.48, 89.0)),  module, OverdriveModule::BIAS_CV_INPUT));    // 16a
+        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(40.64, 89.0)),  module, OverdriveModule::TYPE_CV_INPUT));    // 20d
+        addInput(createInputCentered<PJ301MPort>(mm2px(Vec(10.16, 100.0)), module, OverdriveModule::SHAPE_CV_INPUT));   // 20d
 
         // Cabinet IR enable toggle (16g) — centred between CV rows and audio section
         addParam(createParamCentered<CKSS>(mm2px(Vec(25.4, 96.0)), module, OverdriveModule::CABINET_PARAM));
@@ -228,9 +241,11 @@ struct OverdriveWidget : ModuleWidget {
         addChild(panelLabel(mm2px(Vec(20.32, 72.89)), "TON", sec, 5.5f));
         addChild(panelLabel(mm2px(Vec(30.48, 72.89)), "LVL", sec, 5.5f));
         addChild(panelLabel(mm2px(Vec(40.64, 72.89)), "MID", sec, 5.5f));
-        addChild(panelLabel(mm2px(Vec(10.16, 83.38)), "PRS", sec, 5.5f));
-        addChild(panelLabel(mm2px(Vec(20.32, 83.38)), "PCK", sec, 5.5f));
-        addChild(panelLabel(mm2px(Vec(30.48, 83.38)), "BAS", sec, 5.5f));
+        addChild(panelLabel(mm2px(Vec(10.16, 83.38)), "PRS",  sec, 5.5f));
+        addChild(panelLabel(mm2px(Vec(20.32, 83.38)), "PCK",  sec, 5.5f));
+        addChild(panelLabel(mm2px(Vec(30.48, 83.38)), "BAS",  sec, 5.5f));
+        addChild(panelLabel(mm2px(Vec(40.64, 83.38)), "TYPE", sec, 5.5f));  // 20d
+        addChild(panelLabel(mm2px(Vec(10.16, 94.38)), "SHP",  sec, 5.5f));  // 20d
 
         addChild(panelLabel(mm2px(Vec(25.40, 91.09)), "CAB", prim, 6.f));
 

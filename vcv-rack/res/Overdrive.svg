@@ -54,14 +54,18 @@
   <text x="120" y="218" text-anchor="middle" fill="#888"
         font-family="sans-serif" font-size="5.5">MID</text>
 
-  <!-- CV row 2: mm2px(10.16/20.32/30.48, 89) = (30/60/90, 263) -->
-  <!-- position mm2px(40.64, 89) reserved for TYPE/SHAPE CV (TODO 20d) -->
+  <!-- CV row 2: mm2px(10.16/20.32/30.48/40.64, 89) = (30/60/90/120, 263) -->
+  <!-- Shape CV: mm2px(10.16, 100) = (30, 295) -->
   <text x="30"  y="249" text-anchor="middle" fill="#888"
         font-family="sans-serif" font-size="5.5">PRS</text>
   <text x="60"  y="249" text-anchor="middle" fill="#888"
         font-family="sans-serif" font-size="5.5">PCK</text>
   <text x="90"  y="249" text-anchor="middle" fill="#888"
         font-family="sans-serif" font-size="5.5">BAS</text>
+  <text x="120" y="249" text-anchor="middle" fill="#888"
+        font-family="sans-serif" font-size="5.5">TYPE</text>
+  <text x="30"  y="279" text-anchor="middle" fill="#888"
+        font-family="sans-serif" font-size="5.5">SHP</text>
 
   <!-- Cabinet IR CKSS toggle: mm2px(25.4, 96) = (75, 284) -->
   <text x="75" y="272" text-anchor="middle" fill="#aaa"

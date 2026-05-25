@@ -501,7 +501,7 @@ The current modules are functional but have several gaps: the Overdrive SVG was 
 
 ### 20d. Distortion type and clip shape CV inputs for Overdrive
 
-- [ ] Currently the Type and Shape parameters can only be changed by turning a knob or using the right-click context menu — there is no way to modulate them from CV; add `TYPE_CV_INPUT` and `SHAPE_CV_INPUT` to `OverdriveModule::InputIds`; when connected, override the knob value with a snapped mapping: 0–8 V → type index `clamp(round(v * 0.5f), 0.f, 4.f)`, 0–4 V → shape index `clamp(round(v * 0.75f), 0.f, 2.f)`; add two `PJ301MPort` jacks to the widget and "TYPE" / "SHP" labels to the SVG; this makes the distortion character automatable from a sequencer, unlocking rhythmic distortion and patch-programmatic sound design.
+- [x] Currently the Type and Shape parameters can only be changed by turning a knob or using the right-click context menu — there is no way to modulate them from CV; add `TYPE_CV_INPUT` and `SHAPE_CV_INPUT` to `OverdriveModule::InputIds`; when connected, override the knob value with a snapped mapping: 0–8 V → type index `clamp(round(v * 0.5f), 0.f, 4.f)`, 0–4 V → shape index `clamp(round(v * 0.75f), 0.f, 2.f)`; add two `PJ301MPort` jacks to the widget and "TYPE" / "SHP" labels to the SVG; this makes the distortion character automatable from a sequencer, unlocking rhythmic distortion and patch-programmatic sound design. `TYPE_CV` at x=40.64, y=89 mm (fills reserved slot in CV row 2); `SHAPE_CV` at x=10.16, y=100 mm (left column between row 2 and audio section).
 
 ### 20e. Tap Tempo input on Delay module
 
@@ -545,6 +545,22 @@ The current modules are functional but have several gaps: the Overdrive SVG was 
 ### 20l. Widen Delay panel to 10HP
 
 - [x] The current 8HP (40.64 mm) panel is cramped with 9 knobs/toggles and 8 inputs spread across narrow columns; change the Delay SVG `viewBox` and `width` from 120 to 150 (10HP = 50.8 mm), update `DelayWidget` right-screw x from 29.14 mm to 49.3 mm, move the three large knobs (Time/Feedback/Mix) to the panel centre at x = 25.4 mm, spread the secondary control pairs (Mod/Diff, Sat/Age, Duck/Depth) to x = 10.16 mm and x = 40.64 mm so they flank the centred large knobs, and move the audio output jack and indicator lights to x = 40.64 mm; the CV row, timing row, audio-in, and bypass jacks remain at their existing x = 10.16/20.32/30.48 mm positions.
+
+### 20o. Widen Overdrive panel to 16HP
+
+- [ ] The 10HP panel is at capacity after 20d: CV row 2 fills all four slots (PRS/PCK/BAS/TYPE at y=89 mm) and SHAPE_CV occupies an isolated single-jack row at y=100 mm wedged between the CAB toggle (y=96 mm) and the audio row (y=112 mm). No clean position remains for SAG (16b), a cabinet type CV input (20r), future §16i extensions (input trim, boost, dirt cut), or the Gated/Octave-Fuzz DistortionType additions (16c/d) if they ever need panel knobs. Change the SVG `viewBox` and `width` from 150 to 240 (16HP = 81.28 mm); move right-screw x from 49.3 mm to 79.8 mm; reflow the two-column knob layout and CV rows across the wider panel, taking advantage of the extra horizontal space to spread controls more legibly; relocate SHAPE_CV from the isolated y=100 mm slot into the expanded CV row 2 so the y=100 mm area is freed; update `res/Overdrive.svg` and all `mm2px` x-coordinates in `OverdriveWidget`.
+
+### 20p. Widen Delay panel to 16HP
+
+- [ ] The 10HP Delay panel cannot cleanly accommodate pending features: the ping-pong toggle (20m) needs a row below Self Osc that doesn't exist; the MOD_DEPTH and DIFFUSION CV jacks (20n) need a 4th and 5th position in the CV row, but the only unused slot at x=40.64 mm, y=104 mm is only 5.5 mm above the SIGNAL_LIGHT at y=109.5 mm — less than the 10 mm VCV Rack minimum port spacing; adding a 3rd CV row would collide with the audio row at y=118 mm. Change the Delay SVG `viewBox` and `width` from 150 to 240 (16HP = 81.28 mm); move right-screw x to 79.8 mm; reflow the centred large-knob layout and secondary control pairs across the wider panel; expand the CV row to accommodate the new MOD and DIFF CV jacks from 20n; shift indicator lights to the new rightmost position above the audio output. Update `res/Delay.svg` and all `mm2px` x-coordinates in `DelayWidget`.
+
+### 20q. Cabinet Type CV input for Overdrive
+
+- [ ] TYPE_CV (20d) lets a sequencer change distortion character at CV rate; the cabinet type has the same need — switching between 1×12, 4×12, and combo IR presets from a gate/CV source is impossible without right-clicking mid-performance. Add `CABINET_TYPE_INPUT` to `OverdriveModule::InputIds`; map 0–4 V → type index `clamp(round(v * 0.5f), 0.f, 2.f)` (0 V = 1×12, ~2 V = 4×12, ~4 V = combo); when connected, override `CABINET_TYPE_PARAM`; label the jack "CAT" (cabinet type) to distinguish it from the CAB enable toggle; add the `PJ301MPort` at a position freed by the 16HP reflow in 20o; update `res/Overdrive.svg`. Prerequisite: 20o.
+
+### 20r. CV inputs for Delay secondary parameters
+
+- [ ] Only TIME, FEEDBACK, and MIX have CV jacks on the Delay panel; TAPE_AGE, DUCK_DEPTH, and SELF_OSC cannot be modulated from a Rack patch, which limits the module's usefulness in expressive patches (e.g., automating tape degradation via an LFO, or gating self-oscillation from a sequencer). Add `TAPE_AGE_INPUT` (±5 V → ±0.5 age offset, same ±half-range convention as other CV jacks), `DUCK_DEPTH_INPUT` (±5 V → ±0.5 depth offset), and `SELF_OSC_INPUT` (gate > 1 V enables self-oscillation, overriding the CKSS toggle) to `DelayModule::InputIds`; add `configInput()` calls and CV-aware logic in `process()`; add `PJ301MPort` widgets labeled "AGE", "DEP", and "OSC" at panel positions made available by the 16HP reflow in 20p; update `res/Delay.svg`. Prerequisite: 20p.
 
 ## 21. JUCE Plugin — GUI Improvements
 
