@@ -71,9 +71,12 @@ git submodule update --init libs/juce   # only needed if building the JUCE plugi
 ## Building
 
 ```sh
-# Effects library + Catch2 tests (no SDKs required)
+# Configure and build — effects library + Catch2 tests (no SDKs required)
+# cmake --build also compiles the Catch2 test binaries when catch2 is installed
 cmake -B build -G Ninja
 cmake --build build
+
+# Run all C++ unit tests
 ctest --test-dir build --output-on-failure
 ```
 
@@ -132,6 +135,8 @@ Restart VCV Rack after installing.
 
 ## C++ Tests
 
+Catch2 test binaries are compiled by `cmake --build build` when `catch2` is installed (see Prerequisites). Build first, then run with `ctest`:
+
 ```sh
 ctest --test-dir build --output-on-failure          # all Catch2 tests
 ctest --test-dir build -R Overdrive                 # overdrive tests (title prefix, not file name)
@@ -181,25 +186,42 @@ git submodule update --init libs/juce
 
 To use a different local clone, pass `-DJUCE_DIR=/path/to/JUCE` to CMake.
 
+## Python Tests
+
+Python unit tests (pytest) cover both prototype modules and are independent of the C++ build:
+
+```sh
+uv run --project python pytest            # run all Python unit tests
+ruff check python/                        # lint
+```
+
+## Golden WAV Validation
+
+Golden WAVs are the reference outputs produced by the Python prototypes. They must be generated once (and regenerated after any algorithm change) before the C++ validation can run. The `make validate` step builds `wav_compare` via CMake if needed.
+
+```sh
+make golden        # generate tests/golden/input/*.wav + tests/golden/*.wav from Python
+make validate      # build wav_compare (C++), run it on every golden input → tests/output/
+make compare       # validate + diff every golden WAV against its C++ output (exits non-zero on mismatch)
+make clean-output  # remove tests/output/
+```
+
+`make golden` is Python-only and requires no prior C++ build. `make compare` depends on `make validate`, which triggers a CMake build of `wav_compare` automatically.
+
+## Docs Plot Generation
+
+PNG plots in `docs/img/` are not generated automatically during the CMake build. Regenerate them explicitly after changing any effect algorithm or documentation:
+
+```sh
+uv run --project python python/generate_docs_plots.py    # regenerate all docs/img/ PNG plots
+```
+
 ## Python Environment
 
 ```sh
 uv run --project python python/overdrive.py in.wav out.wav --drive 0.7 --mode softclip --plot
 uv run --project python python/delay.py in.wav out.wav --time-ms 300 --feedback 0.4
-uv run --project python python/compare.py --all           # diff all golden vs C++ output
-uv run --project python pytest                            # run Python unit tests
-uv run --project python python/generate_docs_plots.py    # regenerate docs/img/ PNG plots
 uv add --project python <package>                         # add a Python dependency
-ruff check python/                                        # lint
-```
-
-**Golden WAV validation** (run after any algorithm change):
-
-```sh
-make golden        # regenerate tests/golden/input/*.wav + tests/golden/*.wav
-make validate      # build wav_compare, run C++ on all golden inputs → tests/output/
-make compare       # validate + diff every golden WAV against its C++ output
-make clean-output  # remove tests/output/
 ```
 
 ## Project Layout
