@@ -271,6 +271,43 @@ struct DelayWidget : ModuleWidget {
         // Signal (green) and clip (red) indicator lights above the output jack
         addChild(createLightCentered<SmallLight<GreenLight>>(mm2px(Vec(40.64, 109.5)), module, DelayModule::SIGNAL_LIGHT));
         addChild(createLightCentered<SmallLight<RedLight>>(mm2px(Vec(40.64, 112.0)), module, DelayModule::CLIP_LIGHT));
+
+        // Panel text labels (nanosvg does not render SVG <text> elements)
+        const NVGcolor blue = nvgRGB(0x6e, 0x9a, 0xc8);
+        const NVGcolor prim = nvgRGB(0xaa, 0xaa, 0xaa);
+        const NVGcolor sec  = nvgRGB(0x88, 0x88, 0x88);
+        const NVGcolor dim  = nvgRGB(0x55, 0x55, 0x55);
+        const NVGcolor sub  = nvgRGB(0x66, 0x66, 0x66);
+
+        addChild(panelLabel(mm2px(Vec(25.40,  5.93)), "DELAY",   blue, 9.f));
+        addChild(panelLabel(mm2px(Vec(25.40,  9.65)), "ANOESIS", sub,  5.f));
+
+        addChild(panelLabel(mm2px(Vec(25.40, 16.09)), "TIME",     prim, 7.f));
+        addChild(panelLabel(mm2px(Vec(25.40, 38.09)), "FEEDBACK", prim, 7.f));
+        addChild(panelLabel(mm2px(Vec(25.40, 60.11)), "MIX",      prim, 7.f));
+
+        addChild(panelLabel(mm2px(Vec(10.16, 70.10)), "MOD",   prim, 6.f));
+        addChild(panelLabel(mm2px(Vec(40.64, 70.10)), "DIFF",  prim, 6.f));
+        addChild(panelLabel(mm2px(Vec(10.16, 77.21)), "SAT",   prim, 6.f));
+        addChild(panelLabel(mm2px(Vec(40.64, 77.21)), "AGE",   prim, 6.f));
+        addChild(panelLabel(mm2px(Vec(10.16, 87.37)), "DUCK",  prim, 6.f));
+        addChild(panelLabel(mm2px(Vec(25.40, 87.37)), "OSC",   blue, 6.f));
+        addChild(panelLabel(mm2px(Vec(40.64, 87.37)), "DEPTH", prim, 6.f));
+
+        addChild(panelLabel(mm2px(Vec(20.32,  98.08)), "CV",    dim, 5.f));
+        addChild(panelLabel(mm2px(Vec(10.16, 100.68)), "TIM",   sec, 5.5f));
+        addChild(panelLabel(mm2px(Vec(20.32, 100.68)), "FB",    sec, 5.5f));
+        addChild(panelLabel(mm2px(Vec(30.48, 100.68)), "MIX",   sec, 5.5f));
+
+        addChild(panelLabel(mm2px(Vec(10.16, 107.44)), "TAP",   sec, 5.5f));
+        addChild(panelLabel(mm2px(Vec(20.32, 107.44)), "CLK",   sec, 5.5f));
+        addChild(panelLabel(mm2px(Vec(30.48, 107.44)), "V/OCT", sec, 5.5f));
+
+        addChild(panelLabel(mm2px(Vec(10.16, 121.36)), "L IN",  sec,  5.5f));
+        addChild(panelLabel(mm2px(Vec(20.32, 121.36)), "BYP",   sec,  5.5f));
+        addChild(panelLabel(mm2px(Vec(30.48, 121.36)), "R IN",  sec,  5.5f));
+        addChild(panelLabel(mm2px(Vec(40.64, 121.36)), "L OUT", blue, 5.5f));
+        addChild(panelLabel(mm2px(Vec(40.64, 125.45)), "R OUT", blue, 5.5f));
     }
 
     void appendContextMenu(Menu* menu) override {

@@ -201,6 +201,41 @@ struct OverdriveWidget : ModuleWidget {
         // Signal (green) and clip (red) indicator lights above the output jack
         addChild(createLightCentered<SmallLight<GreenLight>>(mm2px(Vec(40.64, 101.0)), module, OverdriveModule::SIGNAL_LIGHT));
         addChild(createLightCentered<SmallLight<RedLight>>(mm2px(Vec(40.64, 104.5)), module, OverdriveModule::CLIP_LIGHT));
+
+        // Panel text labels (nanosvg does not render SVG <text> elements)
+        // y values are SVG baseline positions corrected to visual centre: (baseline - fontSize/2) / 2.953
+        const NVGcolor gold = nvgRGB(0xc8, 0xa9, 0x6e);
+        const NVGcolor prim = nvgRGB(0xaa, 0xaa, 0xaa);
+        const NVGcolor sec  = nvgRGB(0x88, 0x88, 0x88);
+        const NVGcolor dim  = nvgRGB(0x55, 0x55, 0x55);
+        const NVGcolor sub  = nvgRGB(0x66, 0x66, 0x66);
+
+        addChild(panelLabel(mm2px(Vec(25.40,  5.93)), "OVERDRIVE", gold, 9.f));
+        addChild(panelLabel(mm2px(Vec(25.40,  9.65)), "ANOESIS",   sub,  5.f));
+
+        addChild(panelLabel(mm2px(Vec(15.24, 16.09)), "DRIVE", prim, 7.f));
+        addChild(panelLabel(mm2px(Vec(15.24, 34.03)), "TONE",  prim, 7.f));
+        addChild(panelLabel(mm2px(Vec(15.24, 52.00)), "LEVEL", prim, 7.f));
+
+        addChild(panelLabel(mm2px(Vec(35.56, 16.17)), "MID",  prim, 6.5f));
+        addChild(panelLabel(mm2px(Vec(35.56, 34.10)), "PRES", prim, 6.5f));
+        addChild(panelLabel(mm2px(Vec(35.56, 52.15)), "PICK", prim, 6.f));
+        addChild(panelLabel(mm2px(Vec(35.56, 60.28)), "BIAS", prim, 6.f));
+
+        addChild(panelLabel(mm2px(Vec(25.40, 70.26)), "CV",  dim, 5.f));
+        addChild(panelLabel(mm2px(Vec(10.16, 72.89)), "DRV", sec, 5.5f));
+        addChild(panelLabel(mm2px(Vec(20.32, 72.89)), "TON", sec, 5.5f));
+        addChild(panelLabel(mm2px(Vec(30.48, 72.89)), "LVL", sec, 5.5f));
+        addChild(panelLabel(mm2px(Vec(40.64, 72.89)), "MID", sec, 5.5f));
+        addChild(panelLabel(mm2px(Vec(10.16, 83.38)), "PRS", sec, 5.5f));
+        addChild(panelLabel(mm2px(Vec(20.32, 83.38)), "PCK", sec, 5.5f));
+        addChild(panelLabel(mm2px(Vec(30.48, 83.38)), "BAS", sec, 5.5f));
+
+        addChild(panelLabel(mm2px(Vec(25.40, 91.09)), "CAB", prim, 6.f));
+
+        addChild(panelLabel(mm2px(Vec(10.16, 106.33)), "IN",  sec,  6.f));
+        addChild(panelLabel(mm2px(Vec(25.40, 106.33)), "BYP", sec,  6.f));
+        addChild(panelLabel(mm2px(Vec(40.64, 115.81)), "OUT", gold, 6.f));
     }
 
     void appendContextMenu(Menu* menu) override {

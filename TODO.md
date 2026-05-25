@@ -92,7 +92,7 @@
 - [x] Add a `tests` CMake target that runs the C++ unit tests via CTest (`ctest --output-on-failure`)
 - [x] Add a Python `Makefile` or `justfile` target that runs all Python validation scripts
 - [x] Verify builds on macOS (and optionally Linux/Windows) from a clean checkout
-- [ ] Add a `make test` phony target to the `Makefile` that builds `effects_tests` via CMake and then runs `ctest --test-dir build --output-on-failure`; currently the two validation pipelines (Catch2 unit tests via `ctest` and golden WAV comparison via `make compare`) have no shared entry point, requiring separate invocations; a combined `make test` creates a single command for CI and post-change verification.
+- [x] Add a `make test` phony target to the `Makefile` that builds `effects_tests` via CMake and then runs `ctest --test-dir build --output-on-failure`; currently the two validation pipelines (Catch2 unit tests via `ctest` and golden WAV comparison via `make compare`) have no shared entry point, requiring separate invocations; a combined `make test` creates a single command for CI and post-change verification.
 
 ## 8. C++ Testing with Catch2
 
@@ -150,6 +150,10 @@
 - [x] Overdrive: Smooth `mid` and `presence` parameter changes to eliminate biquad-state-reset transients during automation — replaced "redesign + state reset" with `SmoothedValue midSmoothed/presSmoothed`; biquads now redesign without state reset so the filter settles naturally; golden tests still pass
 - [x] Overdrive: Replace `std::tanh` / `std::atan` per oversampled sample in `SoftClip` and `Asymmetric` modes — added `fastTanh` ([7/6] rational Padé, max error < 5e-4); precompute `tanh(g)` scale once per original-rate sample into `scaleBuf`; `atan` uses float overload instead of double cast; all 15/15 golden tests pass
 - [x] Overdrive: Removed the dead `float prevMidComp = 0.0f` field from `libs/effects/Overdrive.h`
+- [ ] JUCE: Implement `releaseResources()` — call `reset()` on all overdrive, cabinet, and delay instances so filter and delay-line state is zeroed when the host deactivates the plugin; while the JUCE contract guarantees `prepareToPlay()` before the next `processBlock()`, clearing state on release makes the lifecycle explicit and guards against any host that skips the guarantee.
+- [ ] JUCE: Make `getTailLengthSeconds()` dynamic — replace the hardcoded `return 2.0` with `return *apvts.getRawParameterValue("dl_time") / 1000.0` (an atomic read, safe from any thread); at short delay times (e.g. 1 ms) the host currently waits a full 2 seconds after playback stop to render the tail, which causes unnecessary latency before the transport can be repositioned.
+- [ ] VCV Rack: Reset `bypassHigh` to `false` in `onReset()` in both `OverdriveModule` and `DelayModule` — if the bypass gate is high when the user right-clicks → Initialize, `bypassHigh` stays `true` and the module continues bypassing until the gate goes low; add `bypassHigh = false;` to both `onReset()` overrides.
+- [ ] VCV Rack: Zero tap/clock accumulated state in `DelayModule::onReset()` — `tapPrimed`, `tapHigh`, `tapTimeMs`, `tapSampleCount`, `clkPrimed`, `clkHigh`, `clkTimeMs`, and `clkSampleCount` are not cleared by the current `onReset()`, so the first clock rising edge after right-click → Initialize computes its interval including time that elapsed before the reset, potentially setting the wrong delay time; reset all eight fields to their zero/false defaults in `onReset()`.
 
 ## 12. Configurable Distortion Types
 

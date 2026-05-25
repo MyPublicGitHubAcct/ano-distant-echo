@@ -3,7 +3,7 @@ WAV_CMP   := $(BUILDDIR)/tests/wav_compare
 INPUT_DIR := tests/golden/input
 OUT_DIR   := tests/output
 
-.PHONY: golden validate compare clean-output
+.PHONY: golden validate compare clean-output test
 
 # ------------------------------------------------------------------
 # golden: generate reference input WAVs + Python golden output WAVs.
@@ -65,3 +65,14 @@ compare: validate
 
 clean-output:
 	rm -rf $(OUT_DIR)
+
+# ------------------------------------------------------------------
+# test: build effects_tests, run all Catch2 unit tests via ctest,
+# then run the golden WAV comparison pipeline.
+# Single entry point for CI and post-change verification.
+# ------------------------------------------------------------------
+test:
+	cmake -B $(BUILDDIR) -G Ninja
+	cmake --build $(BUILDDIR) --target effects_tests
+	ctest --test-dir $(BUILDDIR) --output-on-failure
+	$(MAKE) compare

@@ -219,3 +219,42 @@ To run a tag-based subset without CTest, invoke the binary directly with Catch2'
 ```
 
 **Rule:** When using `catch_discover_tests`, the CTest test name is the Catch2 test case title only — binary names and `[tags]` are not searchable via `-R`. Design test case titles with a shared, stable prefix (here `AnoLookAndFeel:`) so that `ctest -R <Prefix>` selects the entire suite. Use Catch2 tags for sub-grouping within the binary but rely on the title prefix for CTest integration.
+
+---
+
+## VCV Rack Panel SVG: `<text>` Elements Not Rendered by nanosvg
+
+**Symptom:** All text labels on both VCV Rack panels (knob names, port labels, module title, section headers) were invisible at runtime. The panels showed correctly colored backgrounds, accent strips, screw holes, and indicator light circles, but no text at all.
+
+**How it was identified:** The user observed the missing text directly in VCV Rack. Inspecting the SVG source files (`res/Overdrive.svg`, `res/Delay.svg`) confirmed that all labels were present as standard SVG `<text>` elements with valid `fill`, `font-family`, `font-size`, and `text-anchor` attributes — there was no authoring error in the SVGs themselves.
+
+**Root cause:** VCV Rack renders panel SVGs using **nanosvg**, a lightweight SVG parser/rasterizer that intentionally omits several SVG features to stay small. `<text>` elements are among the unsupported features — nanosvg silently discards them without warning. Every `<text>` element in the SVG is simply not drawn. This is a fundamental limitation of the renderer, not a bug that can be fixed in the SVG.
+
+**Fix:** Added a `PanelLabel` widget to `vcv-rack/src/plugin.hpp` that renders text via nanoVG draw calls at widget paint time:
+
+```cpp
+struct PanelLabel : widget::Widget {
+    std::string text;
+    NVGcolor color = nvgRGB(0xaa, 0xaa, 0xaa);
+    float fontSize = 9.f;
+
+    void draw(const DrawArgs& args) override {
+        if (text.empty()) return;
+        auto font = APP->window->loadFont(asset::system("res/fonts/DejaVuSans.ttf"));
+        if (!font) return;
+        nvgFontFaceId(args.vg, font->handle);
+        nvgFontSize(args.vg, fontSize);
+        nvgTextAlign(args.vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+        nvgFillColor(args.vg, color);
+        nvgText(args.vg, 0, 0, text.c_str(), nullptr);
+    }
+};
+```
+
+A factory helper `panelLabel(centerPx, text, color, fontSize)` is called in each `ModuleWidget` constructor via `addChild()`. Label positions are derived from the SVG coordinates using the known `mm2px` conversion factor (~2.953 px/mm): `x_mm = svg_x / 2.953`, `y_mm = (svg_baseline_y − fontSize / 2) / 2.953` (the `fontSize / 2` correction converts the SVG baseline position to the visual centre expected by `NVG_ALIGN_MIDDLE`). Colors and font sizes match the SVG values exactly.
+
+The `<text>` elements remain in the SVG files as human-readable documentation of intended label positions, but they have no effect on the rendered output.
+
+**Going forward:** Never use SVG `<text>` elements for VCV Rack panel labels — they will never appear. All visible text on a VCV Rack panel must be added as `addChild()` calls in the `ModuleWidget` constructor, using `PanelLabel` (or equivalent nanoVG drawing code). When designing a new panel in an SVG editor, include `<text>` elements as a layout guide, but treat them as dead weight in the shipped file and mirror every label with a corresponding `addChild(panelLabel(...))` call in C++.
+
+**Rule:** nanosvg (VCV Rack's SVG renderer) silently drops `<text>` elements. All panel text must be rendered programmatically using nanoVG in the `ModuleWidget::draw()` path. Use `panelLabel(mm2px(Vec(x_mm, y_mm)), "LABEL", color, fontSize)` to add each label, positioning it at the visual centre of where the SVG `<text>` baseline would have been.
